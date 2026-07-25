@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paws Tracker — Lo que sigue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  :root{
+    --bg:#1b1a18; --surface:#242320; --surface2:#2c2a26; --border:#3c3a35;
+    --green:#6db33f; --green2:#8fce5c; --green-dim:#6db33f26;
+    --text:#f1efe9; --text-dim:#a8a49b;
+  }
+  :root[data-theme="light"]{
+    --bg:#eef1e6; --surface:#ffffff; --surface2:#e6e9db; --border:#d2d6c5;
+    --green:#4f8a2b; --green2:#3f7020; --green-dim:#4f8a2b1a;
+    --text:#20241a; --text-dim:#5b5f52;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#eef1e6; --surface:#ffffff; --surface2:#e6e9db; --border:#d2d6c5;
+      --green:#4f8a2b; --green2:#3f7020; --green-dim:#4f8a2b1a;
+      --text:#20241a; --text-dim:#5b5f52;
+    }
+  }
+
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Nunito',-apple-system,'Segoe UI',sans-serif;
+    line-height:1.6;
+  }
+  a{ color:var(--green2); }
+  h1,h2,h3,h4{ font-family:'Bebas Neue',sans-serif; font-weight:400; letter-spacing:1.2px; text-wrap:balance; }
+
+  .eyebrow{
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:11px;
+    letter-spacing:2.2px; text-transform:uppercase; color:var(--green2);
+  }
+
+  .theme-toggle{
+    position:fixed; top:18px; right:18px; z-index:20;
+    padding:7px 14px; font-family:'Nunito',sans-serif; font-weight:700; font-size:11px;
+    border:1px solid var(--border); border-radius:20px; background:var(--surface);
+    color:var(--text-dim); cursor:pointer; user-select:none;
+  }
+  .theme-toggle:hover{ color:var(--green2); border-color:var(--green); }
+
+  .wrap{ max-width:960px; margin:0 auto; padding:0 24px; }
+
+  header.cover{
+    padding:100px 0 60px; text-align:center;
+    border-bottom:1px solid var(--border);
+  }
+  header.cover .eyebrow{ display:block; margin-bottom:14px; }
+  header.cover h1{ font-size:clamp(40px,7vw,68px); line-height:.95; }
+  header.cover h1 span{ color:var(--green); }
+  header.cover p{ color:var(--text-dim); max-width:520px; margin:18px auto 0; font-size:15.5px; }
+  header.cover .back-link{
+    display:inline-block; margin-top:24px; font-size:13px; font-weight:700;
+    color:var(--text-dim); border:1px solid var(--border); border-radius:20px;
+    padding:6px 16px; text-decoration:none;
+  }
+  header.cover .back-link:hover{ border-color:var(--green); color:var(--green2); }
+
+  section{ padding:64px 0; border-bottom:1px solid var(--border); }
+  section:last-of-type{ border-bottom:none; }
+  section .eyebrow{ display:block; margin-bottom:10px; }
+  section > h2{ font-size:clamp(28px,4vw,38px); margin-bottom:8px; }
+  section > .lede{ color:var(--text-dim); max-width:620px; font-size:15px; margin-bottom:36px; }
+
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
+
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--green);
+    border-radius:14px; padding:22px;
+  }
+  .card h3{ font-size:20px; color:var(--text); margin-bottom:6px; }
+  .card .status{
+    display:inline-block; font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase;
+    color:var(--green2); background:var(--green-dim); border:1px solid var(--green);
+    border-radius:20px; padding:3px 10px; margin-bottom:12px;
+  }
+  .card ul{ list-style:none; }
+  .card li{ padding:6px 0; font-size:14px; color:var(--text-dim); border-bottom:1px solid var(--border); }
+  .card li:last-child{ border-bottom:none; }
+  .card li:before{ content:"▸ "; color:var(--green); font-weight:bold; }
+  .card p.desc{ font-size:14px; color:var(--text-dim); }
+
+  .callout{
+    margin-top:24px; background:var(--green-dim); border:1px solid var(--green);
+    border-radius:12px; padding:16px 20px; font-size:14.5px;
+  }
+  .callout .lbl{ color:var(--green2); text-transform:uppercase; letter-spacing:1px; font-size:10.5px; display:block; margin-bottom:4px; font-weight:800; }
+
+  .timeline{ position:relative; padding-left:4px; }
+  .timeline-item{
+    padding:0 0 26px 32px; border-left:2px solid var(--border); position:relative;
+  }
+  .timeline-item:last-child{ padding-bottom:0; }
+  .timeline-item:before{
+    content:""; width:11px; height:11px; background:var(--green); border-radius:50%;
+    position:absolute; left:-6.5px; top:2px; border:2px solid var(--bg);
+  }
+  .timeline-item .phase{
+    font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--green2); display:block; margin-bottom:4px;
+  }
+  .timeline-item h4{ font-size:19px; margin-bottom:4px; color:var(--text); }
+  .timeline-item p{ font-size:14px; color:var(--text-dim); }
+
+  footer{
+    text-align:center; padding:48px 24px; color:var(--text-dim); font-size:12.5px;
+  }
+
+  .price-card{
+    background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--green);
+    border-radius:14px; padding:28px 30px 24px;
+  }
+  .price-card h3{ font-size:20px; color:var(--text); margin-bottom:4px; }
+  .price-card .desc{ font-size:14px; color:var(--text-dim); margin-bottom:28px; }
+
+  .price-chart{ width:100%; height:auto; overflow:visible; }
+  .price-chart .value-label{ font-family:'Bebas Neue',sans-serif; font-size:17px; fill:var(--text); text-anchor:middle; letter-spacing:.5px; }
+  .price-chart .month-label{ font-family:'Nunito',sans-serif; font-size:10.5px; font-weight:700; fill:var(--text-dim); text-anchor:middle; text-transform:uppercase; letter-spacing:.3px; }
+  .price-chart .month-label.current{ fill:var(--green2); }
+  .price-chart .note-label{ font-family:'Nunito',sans-serif; font-size:10px; font-style:italic; fill:var(--text-dim); text-anchor:middle; }
+  .price-chart .price-line{ fill:none; stroke:var(--green); stroke-width:2.25; stroke-linecap:round; stroke-linejoin:round; }
+  .price-chart .price-line.forecast{ stroke-dasharray:5 4; }
+  .price-chart .price-area{ fill:var(--green); opacity:.10; }
+  .price-chart .grid-h{ stroke:var(--border); stroke-width:1; }
+  .price-chart .grid-v{ stroke:var(--border); stroke-width:1; opacity:.5; }
+  .price-chart .pt{ fill:var(--green); stroke:var(--surface); stroke-width:2; }
+  .price-chart .pt.forecast{ fill:var(--surface); stroke:var(--green); stroke-width:2; }
+
+  .price-deltas{
+    display:flex; justify-content:space-between; gap:10px; padding:14px 4px 0; flex-wrap:wrap;
+  }
+  .price-deltas span{
+    font-size:12.5px; color:var(--text-dim); flex:1; text-align:center; min-width:110px;
+  }
+  .price-deltas strong{ color:var(--green2); font-weight:800; }
+
+  .price-table{
+    width:100%; margin-top:28px; border-collapse:collapse; font-size:13.5px;
+  }
+  .price-table th{
+    text-align:left; color:var(--text-dim); font-size:11px; text-transform:uppercase;
+    letter-spacing:.5px; font-weight:800; padding:0 10px 8px; border-bottom:1px solid var(--border);
+  }
+  .price-table td{
+    padding:9px 10px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; color:var(--text);
+  }
+  .price-table tr:last-child td{ border-bottom:none; }
+  .price-table td:first-child, .price-table th:first-child{ padding-left:0; }
+</style>
+</head>
+<body>
+
+<div class="theme-toggle" id="themeToggle" role="button" tabindex="0" aria-label="Cambiar tema">☾ / ☀</div>
+
+<header class="cover">
+  <div class="wrap">
+    <span class="eyebrow">Paws Tracker</span>
+    <h1>Lo que <span>sigue</span></h1>
+    <p>Hacia dónde va el sistema: lo pendiente en la operación, las propuestas nuevas sobre la mesa, y el orden en que tiene sentido construirlas.</p>
+    <a class="back-link" href="https://paws-training-presentacion.vercel.app" target="_blank" rel="noopener">← Ver cómo funciona Paws Tracker hoy</a>
+  </div>
+</header>
+
+<section id="precios">
+  <div class="wrap">
+    <span class="eyebrow">01 · Precios</span>
+    <h2>Historial y proyección — programa semanal</h2>
+    <p class="lede">Cuatro ajustes de precio en 2026, con el impacto en facturación mensual a la capacidad actual (17 perros/semana).</p>
+
+    <div class="price-card">
+      <h3>Precio por semana de entrenamiento</h3>
+      <p class="desc">6 días bajó a 5 días en el ajuste de mayo. Agosto es proyectado.</p>
+
+      <svg class="price-chart" viewBox="0 0 650 180" role="img" aria-label="Precio semanal por mes: febrero-marzo $350, abril $375, mayo-julio $385, agosto $395 proyectado">
+        <!-- grid -->
+        <line class="grid-h" x1="40" y1="120" x2="610" y2="120"></line>
+        <line class="grid-h" x1="40" y1="70" x2="610" y2="70"></line>
+        <line class="grid-h" x1="40" y1="50" x2="610" y2="50"></line>
+        <line class="grid-h" x1="40" y1="30" x2="610" y2="30"></line>
+        <line class="grid-v" x1="50" y1="15" x2="50" y2="140"></line>
+        <line class="grid-v" x1="141.67" y1="15" x2="141.67" y2="140"></line>
+        <line class="grid-v" x1="233.33" y1="15" x2="233.33" y2="140"></line>
+        <line class="grid-v" x1="325" y1="15" x2="325" y2="140"></line>
+        <line class="grid-v" x1="416.67" y1="15" x2="416.67" y2="140"></line>
+        <line class="grid-v" x1="508.33" y1="15" x2="508.33" y2="140"></line>
+        <line class="grid-v" x1="600" y1="15" x2="600" y2="140"></line>
+
+        <!-- area fill (step) -->
+        <path class="price-area" d="M50,120 L233.33,120 L233.33,70 L325,70 L325,50 L508.33,50 L508.33,30 L600,30 L600,140 L50,140 Z"></path>
+
+        <!-- step line: actual -->
+        <path class="price-line" d="M50,120 L233.33,120 L233.33,70 L325,70 L325,50 L508.33,50"></path>
+        <!-- step line: forecast -->
+        <path class="price-line forecast" d="M508.33,50 L508.33,30 L600,30"></path>
+
+        <circle class="pt" cx="50" cy="120" r="5"></circle>
+        <circle class="pt" cx="233.33" cy="70" r="5"></circle>
+        <circle class="pt" cx="325" cy="50" r="5"></circle>
+        <circle class="pt forecast" cx="600" cy="30" r="5"></circle>
+
+        <text class="value-label" x="50" y="108">$350</text>
+        <text class="value-label" x="233.33" y="58">$375</text>
+        <text class="value-label" x="325" y="38">$385</text>
+        <text class="value-label" x="600" y="18">$395</text>
+
+        <text class="month-label" x="50" y="155">Feb</text>
+        <text class="month-label" x="141.67" y="155">Mar</text>
+        <text class="month-label" x="233.33" y="155">Abr</text>
+        <text class="month-label" x="325" y="155">May</text>
+        <text class="month-label" x="416.67" y="155">Jun</text>
+        <text class="month-label current" x="508.33" y="155">Jul</text>
+        <text class="month-label" x="600" y="155">Ago</text>
+        <text class="note-label" x="508.33" y="168">hoy</text>
+        <text class="note-label" x="600" y="168">proyectado</text>
+      </svg>
+      <div class="price-deltas">
+        <span>Feb → Abr <strong>+$25</strong> (+7.1%)</span>
+        <span>Abr → May <strong>+$10</strong> (+2.7%)</span>
+        <span>Jul → Ago <strong>+$10</strong> (+2.6%)</span>
+      </div>
+
+      <table class="price-table">
+        <thead>
+          <tr><th>Periodo</th><th>Precio</th><th>Facturación semanal</th><th>Facturación mensual est.</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Febrero–Marzo 2026</td><td>$350</td><td>$5,950</td><td>~$25,764</td></tr>
+          <tr><td>Abril 2026</td><td>$375</td><td>$6,375</td><td>~$27,604</td></tr>
+          <tr><td>Mayo–Julio 2026 (hoy)</td><td>$385</td><td>$6,545</td><td>~$28,355</td></tr>
+          <tr><td>Agosto 2026 (proyectado)</td><td>$395</td><td>$6,715</td><td>~$29,076</td></tr>
+        </tbody>
+      </table>
+      <p class="desc" style="margin:14px 0 0;">Facturación semanal a 17 perros/semana (capacidad actual) × 4.33 semanas/mes.</p>
+
+      <div class="callout">
+        <span class="lbl">Proyección con capacidad ampliada</span>
+        Con el equipo completo (ver contrataciones en Propuestas nuevas) a <strong>26 perros/semana</strong> y el precio de agosto ($395): $10,270/semana → <strong>~$44,469/mes</strong> — un incremento de ~$16,114/mes sobre la facturación actual (17 perros a $385).
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="operacional">
+  <div class="wrap">
+    <span class="eyebrow">02 · Pendiente operacional</span>
+    <h2>Lo que ya está diseñado, falta construir</h2>
+    <p class="lede">Dos piezas planificadas que completan el sistema actual antes de sumar funciones nuevas.</p>
+    <div class="grid">
+      <div class="card">
+        <span class="status">Próximamente</span>
+        <h3>Tab Ajustes</h3>
+        <p class="desc">Panel para editar desde la app —sin tocar la base de datos directamente— el nombre del negocio, contacto, y la capacidad máxima de perros (hoy fija en 17).</p>
+      </div>
+      <div class="card">
+        <span class="status">Próximamente</span>
+        <h3>Stripe + Panel Financiero</h3>
+        <p class="desc" style="margin-bottom:12px;">Cobro de depósito de $100 después de aprobar una solicitud, y un panel para ver ingresos y cobranzas sin salir de la app. Planificado en 6 fases, listo para arrancar.</p>
+        <ul>
+          <li>Fase 1 — Infraestructura (Vercel + llaves de Stripe)</li>
+          <li>Fase 2 — Panel de configuración de Stripe</li>
+          <li>Fase 3 — Campos financieros por estudiante</li>
+          <li>Fase 4 — Cobro automático del depósito ($100)</li>
+          <li>Fase 5 — Cobro del balance final</li>
+          <li>Fase 6 — Tab "Finanzas" (ingresos, pendientes, histórico)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="propuestas">
+  <div class="wrap">
+    <span class="eyebrow">03 · Propuestas nuevas</span>
+    <h2>Ideas sobre la mesa</h2>
+    <p class="lede">Contrataciones para escalar capacidad, nuevas líneas de ingreso, funciones nuevas en el sistema, y un plan de contenido para atraer clientes.</p>
+
+    <h3 style="margin-bottom:16px;">Contrataciones</h3>
+    <div class="grid">
+      <div class="card">
+        <h3 style="font-size:18px;">Entrenador adicional</h3>
+        <ul>
+          <li>Medio tiempo</li>
+          <li>12:00 p.m. – 5:00 p.m.</li>
+          <li>Cobertura de mediodía para aumentar capacidad de entrenamiento</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="font-size:18px;">Limpieza y mantenimiento</h3>
+        <ul>
+          <li>2 personas — turno mañana</li>
+          <li>1 persona — 12:00 p.m. – 5:00 p.m.</li>
+          <li>Jaulas, alimentación y limpieza general</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="font-size:18px;">Caminador</h3>
+        <ul>
+          <li>Tiempo completo</li>
+          <li>8 horas diarias</li>
+          <li>Caminatas estructuradas para todos los perros</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout">
+      <span class="lbl">Meta operacional</span>
+      Con este equipo, escalar de 17 a 24–26 perros por semana — más ingreso sin perder la calidad de atención por perro.
+    </div>
+
+    <h3 style="margin:40px 0 16px;">Nuevas líneas de ingreso</h3>
+    <div class="card" style="max-width:100%;">
+      <span class="status">Idea nueva</span>
+      <h3>Servicio de paseo — caminata estructurada</h3>
+      <p class="desc" style="margin-bottom:16px;">Para dueños que no pueden pasear a su perro. Se vende como resultado (una caminata con estructura y control), no como el tiempo del paseo — el precio ancla en la tarifa de entrenamiento, no en la de un paseo genérico.</p>
+      <table class="price-table">
+        <thead>
+          <tr><th>Servicio</th><th>Rango sugerido</th><th>Base de comparación</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Paseo normal en PR</td><td>$10–15/hora</td><td>Care.com San Juan ($13.05 promedio)</td></tr>
+          <tr><td>Caminata estructurada (diferencial)</td><td>$25–35/sesión (30–45 min)</td><td>2×–2.5× el paseo normal — se percibe premium sin salirse del techo que paga el mercado de PR</td></tr>
+          <tr><td>Paquete de 8–10 sesiones</td><td>$22–28/sesión</td><td>Descuento 15–20% por volumen, igual que los paquetes de 12 días</td></tr>
+        </tbody>
+      </table>
+      <p class="desc" style="margin:14px 0 0;">Un extra de 2×–2.5× es defendible: en mercados de EE.UU. con datos disponibles, paseadores con certificación/especialización cobran 40–60% más que el promedio. Ir directo a $45–50 sin haber construido antes el nombre de la marca puede topar con resistencia de precio — el techo de PR para paseo normal está bien por debajo del de EE.UU.</p>
+    </div>
+
+    <div class="grid" style="margin-top:20px;">
+      <div class="card">
+        <span class="status">Idea nueva</span>
+        <h3 style="font-size:18px;">Marca propia — leashes, collares y treats</h3>
+        <p class="desc">Línea de productos con marca propia. Venta a clientes del programa como extensión natural del servicio, y potencial de venta al público en general.</p>
+      </div>
+    </div>
+
+    <h3 style="margin:40px 0 16px;">Funciones nuevas</h3>
+    <div class="grid">
+      <div class="card">
+        <h3 style="font-size:18px;">Módulo de inventario</h3>
+        <p class="desc">Control de materiales y stock (collares, correas, suministros) con alertas de stock bajo, visible según rol.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:18px;">Sincronización con Google Calendar</h3>
+        <p class="desc">Entradas y salidas de Firestore reflejadas automáticamente en Google Calendar — sin doble entrada manual.</p>
+      </div>
+    </div>
+
+    <h3 style="margin:40px 0 16px;">Contenido y promoción</h3>
+    <div class="timeline">
+      <div class="timeline-item">
+        <span class="phase">Agosto</span>
+        <h4>Back to School</h4>
+        <p>Octavius como perro insignia, con vestuario de estudiante. Promoción especial "0% IVU" en el programa de entrenamiento para incentivar inscripciones.</p>
+      </div>
+      <div class="timeline-item">
+        <span class="phase">Filmación</span>
+        <h4>Viejo San Juan</h4>
+        <p>Contenido en locación icónica — mostrar lo que se puede hacer con un perro entrenado y balanceado en un espacio reconocido.</p>
+      </div>
+      <div class="timeline-item">
+        <span class="phase">Filmación</span>
+        <h4>Hacienda Los Pablos, Lajas</h4>
+        <p>Gestionar acceso con perros en este zoológico. Contenido en un ambiente natural y controlado.</p>
+      </div>
+      <div class="timeline-item">
+        <span class="phase">Filmación</span>
+        <h4>Manantiales, Vega Baja</h4>
+        <p>Demostrar versatilidad del entrenamiento en ambiente acuático.</p>
+      </div>
+      <div class="timeline-item">
+        <span class="phase">Filmación</span>
+        <h4>Río</h4>
+        <p>Refuerza el mensaje: un perro entrenado te puede acompañar a cualquier lugar.</p>
+      </div>
+      <div class="timeline-item">
+        <span class="phase">Filmación</span>
+        <h4>Centros comerciales de la Isla</h4>
+        <p>Equipo de entrenamiento uniformado, cada uno con un perro, entra a sentarse a tomar café con los perros en calma y relajados — demuestra el resultado del entrenamiento en un ambiente público de alto tráfico.</p>
+      </div>
+    </div>
+
+    <h3 style="margin:40px 0 16px;">Calendario de mercadeo — resto de 2026</h3>
+    <div class="grid">
+      <div class="card">
+        <h3 style="font-size:18px;">Septiembre</h3>
+        <p class="desc"><strong style="color:var(--text);">Día Mundial de la Adopción de Animales.</strong> Contenido: el adiestramiento de un perro rescatado, preparándolo para que una familia lo adopte.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:18px;">Octubre</h3>
+        <p class="desc"><strong style="color:var(--text);">Halloween y Día Mundial de los Animales.</strong> Contenido por definir.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:18px;">Noviembre</h3>
+        <p class="desc"><strong style="color:var(--text);">Acción de Gracias, Black Friday y Cyber Monday.</strong> Contenido por definir.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:18px;">Diciembre</h3>
+        <p class="desc"><strong style="color:var(--text);">Cenas navideñas, moda de gala/invernal.</strong> Contenido por definir.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="itinerario">
+  <div class="wrap">
+    <span class="eyebrow">04 · Itinerario</span>
+    <h2>Orden de construcción</h2>
+    <p class="lede">Por esfuerzo relativo, no por fecha fija — se ajusta según cómo avance el negocio.</p>
+    <div class="timeline">
+      <div class="timeline-item">
+        <span class="phase">Corto plazo</span>
+        <h4>Tab Ajustes + contrataciones prioritarias</h4>
+        <p>Caminador y limpieza primero — son las que más rápido liberan capacidad. Contenido de agosto en paralelo.</p>
+      </div>
+      <div class="timeline-item">
+        <span class="phase">Mediano plazo</span>
+        <h4>Stripe + Panel Financiero, entrenador adicional</h4>
+        <p>6 fases planificadas para cobro de depósito y panel de cobranzas. Se suma el segundo entrenador cuando la demanda lo justifique.</p>
+      </div>
+      <div class="timeline-item">
+        <span class="phase">Mediano-largo plazo</span>
+        <h4>Sincronización con Google Calendar</h4>
+        <p>Automatiza lo que hoy se hace a mano una vez el resto del sistema esté estable.</p>
+      </div>
+      <div class="timeline-item">
+        <span class="phase">Largo plazo</span>
+        <h4>Módulo de inventario</h4>
+        <p>Se construye cuando el volumen de materiales lo justifique.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Paws Tracker — Roadmap · Última actualización: julio 2026</p>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('paws-roadmap-theme');
+  if(saved) root.setAttribute('data-theme', saved);
+
+  function flip(){
+    var current = root.getAttribute('data-theme');
+    var mq = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    if(!current) current = mq;
+    var next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('paws-roadmap-theme', next);
+  }
+  toggle.addEventListener('click', flip);
+  toggle.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' ') flip(); });
+})();
+</script>
+
+</body>
+</html>
