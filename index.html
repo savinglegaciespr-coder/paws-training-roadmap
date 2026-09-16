@@ -318,7 +318,7 @@
       <div class="card">
         <span class="status">Próximamente</span>
         <h3>Tab Ajustes</h3>
-        <p class="desc">Panel para editar desde la app —sin tocar la base de datos directamente— el nombre del negocio, contacto, y la capacidad máxima de perros (hoy fija en 22).</p>
+        <p class="desc">Panel para editar desde la app —sin tocar la base de datos directamente— el nombre del negocio, contacto, y la capacidad máxima de perros (hoy fija en 26).</p>
       </div>
       <div class="card">
         <span class="status">Próximamente</span>
@@ -339,9 +339,9 @@
 
 <section id="horarios">
   <div class="wrap">
-    <span class="eyebrow">03 · Propuesta en discusión</span>
+    <span class="eyebrow">03 · Ya implementado ✅</span>
     <h2>Cómo repartir entregas y entradas en el día</h2>
-    <p class="lede">Hoy tenemos 26 perros, y muchas fechas de salida coinciden el mismo día — más de los que se pueden entregar bien. Estas son 3 formas de organizarlo. <strong style="color:var(--text);">Ninguna está decidida ni implementada todavía</strong> — es para escoger una antes de construirla.</p>
+    <p class="lede">Con 26 perros y muchas fechas de salida coincidiendo el mismo día, se evaluaron 3 formas de organizar el día. <strong style="color:var(--text);">Los dueños escogieron la Opción 2</strong>, y ya está funcionando en la app (publicado el 15 de septiembre de 2026).</p>
 
     <button class="pdf-btn no-print" onclick="window.print()">🖨 Descargar esta propuesta en PDF</button>
 
@@ -358,8 +358,8 @@
       Por cómo funciona el ciclo de entrenamiento hoy, los <strong style="color:var(--text);">lunes nunca hay salidas</strong> (solo entradas) y los <strong style="color:var(--text);">viernes nunca hay entradas</strong> (solo salidas). Los ejemplos de abajo muestran un día típico de martes a jueves — lunes y viernes funcionan distinto.
     </div>
 
-    <div class="scenario">
-      <span class="status">Opción 1</span>
+    <div class="scenario" style="opacity:.6;">
+      <span class="status">Opción 1 · No se eligió</span>
       <h3>Uno sale, uno entra</h3>
       <p class="desc">Cada vez que un perro se va, media hora después entra el siguiente a esa misma jaula. Todo el movimiento pasa en la mañana — la tarde queda libre para entrenar sin interrupciones.</p>
       <div class="mini-timeline">
@@ -379,8 +379,8 @@
       </div>
     </div>
 
-    <div class="scenario">
-      <span class="status">Opción 2</span>
+    <div class="scenario" style="border-top-color:var(--green2); box-shadow:0 0 0 1px var(--green2);">
+      <span class="status">✅ Elegida — en producción</span>
       <h3>Mañana de salidas, tarde de entradas</h3>
       <p class="desc">Las familias que recogen su perro vienen en la mañana. Las que traen uno nuevo, en la tarde. Nunca se cruzan en la recepción.</p>
       <div class="mini-timeline">
@@ -400,8 +400,8 @@
       </div>
     </div>
 
-    <div class="scenario">
-      <span class="status">Opción 3</span>
+    <div class="scenario" style="opacity:.6;">
+      <span class="status">Opción 3 · No se eligió</span>
       <h3>Agenda de citas</h3>
       <p class="desc">Como en un consultorio: el día se divide en citas de 30 minutos, y cada familia reserva su hora de antemano — sin importar si es entrega o entrada.</p>
       <div class="mini-timeline">
@@ -423,7 +423,8 @@
 
     <div class="signoff">
       <div class="opts">
-        <strong>Opción escogida:</strong> &nbsp; ☐ Opción 1 &nbsp;&nbsp; ☐ Opción 2 &nbsp;&nbsp; ☐ Opción 3
+        <strong>Opción escogida:</strong> &nbsp; ☐ Opción 1 &nbsp;&nbsp; ☑ Opción 2 &nbsp;&nbsp; ☐ Opción 3
+        <br/><em>Implementado en producción — 15 de septiembre de 2026.</em>
       </div>
       <div class="line"><span>Firma — Dueño 1</span><span>Fecha</span></div>
       <div class="line"><span>Firma — Dueño 2</span><span>Fecha</span></div>
